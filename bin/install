@@ -1,0 +1,48 @@
+#!/usr/bin/env bash
+
+set -e
+set -o pipefail
+# set -x
+
+ASDF_INSTALL_TYPE=${ASDF_INSTALL_TYPE:-version}
+[ -n "$ASDF_INSTALL_VERSION" ] || (>&2 echo 'Missing ASDF_INSTALL_VERSION' && exit 1)
+[ -n "$ASDF_INSTALL_PATH" ] || (>&2 echo 'Missing ASDF_INSTALL_PATH' && exit 1)
+
+install_plugin() {
+  local install_type=$1
+  local version=$2
+  local install_path=$3
+
+  local bin_install_path="$install_path/bin"
+  local download_url="$(get_download_url $install_type $version)"
+  local tmp_download_file=$(mktemp)
+
+  mkdir -p "$bin_install_path"
+
+  echo "Downloading fly from $download_url"
+  curl -L -s "$download_url" -o "$tmp_download_file"
+  tar zxf "$tmp_download_file" -C "$bin_install_path" || exit 1
+}
+
+get_platform() {
+  [ "Linux" = "$(uname)" ] && echo "linux" || echo "darwin"
+}
+
+get_download_url() {
+  local install_type=$1
+  local tag=$2
+  local version=$2
+  local platform=$(get_platform)
+
+  # HACK: asdf wants numeric version numbers, but most start with a "v"
+  # since people usually tag releases in GitHub with a vX.X.X and _not_ X.X.X
+  # so need to prefix version based on this fragile logic :-/
+  # in case the version is in some other format such as FOOBAR.X.X.X
+  if [[ "$tag" =~ ^[0-9] ]]; then
+    tag="v${tag}"
+  fi
+
+  echo "https://github.com/concourse/concourse/releases/download/${tag}/fly-${version}-${platform}-amd64.tgz"
+}
+
+install_plugin "$ASDF_INSTALL_TYPE" "$ASDF_INSTALL_VERSION" "$ASDF_INSTALL_PATH"
