@@ -8,6 +8,7 @@ Concourse [`fly`][util] plugin for [asdf](https://github.com/asdf-vm/asdf) versi
 
 ```
 asdf plugin-add fly https://github.com/virtualstaticvoid/asdf-fly.git
+asdf install fly latest
 ```
 
 ## Use
