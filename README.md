@@ -1,6 +1,6 @@
 # asdf-fly
 
-[![GitHub Workflow Status](https://img.shields.io/github/workflow/status/virtualstaticvoid/asdf-fly/Main%20Workflow?style=flat-square)](https://github.com/virtualstaticvoid/asdf-fly/actions)
+[![Main Workflow](https://github.com/virtualstaticvoid/asdf-fly/actions/workflows/workflow.yml/badge.svg)](https://github.com/virtualstaticvoid/asdf-fly/actions/workflows/workflow.yml)
 
 Concourse [`fly`][util] plugin for [asdf](https://github.com/asdf-vm/asdf) version manager
 
